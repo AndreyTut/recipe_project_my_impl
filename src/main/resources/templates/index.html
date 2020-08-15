@@ -5,6 +5,10 @@
     <title>Recipe home</title>
 </head>
 <body>
-<h1>My recipes! - devtools active</h1>
+<h1 th:text="'Recipes:'">My recipes! - devtools active</h1>
+<ul th:each="recipe: ${list}">
+    <li th:text="${recipe.getDescription()}">recipe</li>
+    <li th:text="${recipe.getNotes().getRecipeNotes()}">recipe</li>
+</ul>
 </body>
 </html>
