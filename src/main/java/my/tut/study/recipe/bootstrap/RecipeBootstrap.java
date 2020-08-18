@@ -1,5 +1,6 @@
 package my.tut.study.recipe.bootstrap;
 
+import lombok.extern.slf4j.Slf4j;
 import my.tut.study.recipe.domain.*;
 import my.tut.study.recipe.repositories.CategoryRepository;
 import my.tut.study.recipe.repositories.RecipeRepository;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
+@Slf4j
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
     private final RecipeRepository recipeRepository;
@@ -28,6 +30,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
+        log.debug("bootstrapping data");
         recipeRepository.saveAll(getRecipes());
     }
 
