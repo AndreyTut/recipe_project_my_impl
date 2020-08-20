@@ -5,11 +5,13 @@ import my.tut.study.recipe.services.RecipeService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.ui.Model;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import static org.mockito.Mockito.*;
 
@@ -29,8 +31,21 @@ public class IndexControllerTest {
 
     @Test
     public void getIndexPage() {
-        Assert.assertEquals(controller.getIndexPage(model), "index");
+        //given
+        HashSet<Recipe> recipes = new HashSet<>();
+        recipes.add(new Recipe());
+        recipes.iterator().next().setId(100L);
+        recipes.add(new Recipe());
+
+        when(recipeService.getRecipes()).thenReturn(recipes);
+
+        ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
+        //when
+        String page = controller.getIndexPage(model);
+        //then
+        Assert.assertEquals("index", page);
         verify(recipeService, times(1)).getRecipes();
-        verify(model, times(1)).addAttribute("recipes", new HashSet<>());
+        verify(model, times(1)).addAttribute(eq("recipes"), argumentCaptor.capture());
+        Assert.assertEquals(2, argumentCaptor.getValue().size());
     }
 }
