@@ -1,5 +1,7 @@
 package my.tut.study.recipe.services;
 
+import my.tut.study.recipe.converters.RecipeCommandToRecipe;
+import my.tut.study.recipe.converters.RecipeToRecipeCommand;
 import my.tut.study.recipe.domain.Recipe;
 import my.tut.study.recipe.repositories.RecipeRepository;
 import org.junit.Assert;
@@ -21,10 +23,16 @@ public class RecipeServiceImplTest {
     @Mock
     private RecipeRepository recipeRepository;
 
+    @Mock
+    private RecipeToRecipeCommand recipeToRecipeCommand;
+
+    @Mock
+    private RecipeCommandToRecipe recipeCommandToRecipe;
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        recipeService = new RecipeServiceImpl(recipeRepository);
+        recipeService = new RecipeServiceImpl(recipeToRecipeCommand, recipeCommandToRecipe, recipeRepository);
     }
 
     @Test
