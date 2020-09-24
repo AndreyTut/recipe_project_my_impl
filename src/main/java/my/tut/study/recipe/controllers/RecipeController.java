@@ -1,10 +1,10 @@
 package my.tut.study.recipe.controllers;
 
+import my.tut.study.recipe.commands.RecipeCommand;
 import my.tut.study.recipe.services.RecipeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class RecipeController {
@@ -19,5 +19,19 @@ public class RecipeController {
     public String showById(@PathVariable Long id, Model model) {
         model.addAttribute("recipe", recipeService.findById(id));
         return "recipe/show";
+    }
+
+    @GetMapping("recipe/new")
+    public String newRecipe(Model model) {
+        RecipeCommand command = new RecipeCommand();
+//        command.setDescription("new recipe");
+        model.addAttribute("recipe", command);
+        return "recipe/recipeform";
+    }
+
+    @PostMapping("recipe")
+    public String SaveOrEdit(@ModelAttribute RecipeCommand command, Model model) {
+        RecipeCommand savedRecipe = recipeService.saveRecipeCommand(command);
+        return "redirect:/recipe/show/" + savedRecipe.getId();
     }
 }
