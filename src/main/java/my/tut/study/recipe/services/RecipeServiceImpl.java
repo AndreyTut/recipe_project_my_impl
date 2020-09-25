@@ -36,12 +36,12 @@ public class RecipeServiceImpl implements RecipeService {
 //        return recipes;
 //    }
 //
-//    @Override
-//    public RecipeCommand findById(Long id) {
-//        Optional<Recipe> optionalRecipe = recipeRepository.findById(id);
-//        Recipe recipe = optionalRecipe.orElseThrow(() -> new RuntimeException("not found"));
-//        return recipeToRecipeCommand.convert(recipe);
-//    }
+    @Override
+    public RecipeCommand findCommandById(Long id) {
+        Optional<Recipe> optionalRecipe = recipeRepository.findById(id);
+        Recipe recipe = optionalRecipe.orElseThrow(() -> new RuntimeException("not found"));
+        return recipeToRecipeCommand.convert(recipe);
+    }
 
     @Override
     public Set<Recipe> getRecipes() {
