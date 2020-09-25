@@ -1,11 +1,13 @@
 package my.tut.study.recipe.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import my.tut.study.recipe.commands.RecipeCommand;
 import my.tut.study.recipe.services.RecipeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @Controller
 public class RecipeController {
 
@@ -15,6 +17,7 @@ public class RecipeController {
         this.recipeService = recipeService;
     }
 
+    @GetMapping
     @RequestMapping("/recipe/{id}/show")
     public String showById(@PathVariable Long id, Model model) {
         model.addAttribute("recipe", recipeService.findById(id));
@@ -39,5 +42,13 @@ public class RecipeController {
     public String update(@PathVariable String id, Model model) {
         model.addAttribute("recipe", recipeService.findCommandById(Long.valueOf(id)));
         return "recipe/recipeform";
+    }
+
+
+    @GetMapping("recipe/{id}/delete")
+    public String delete(@PathVariable String id) {
+        log.debug("Deleting id: " + id);
+        recipeService.deleteById(Long.valueOf(id));
+        return "redirect:/";
     }
 }

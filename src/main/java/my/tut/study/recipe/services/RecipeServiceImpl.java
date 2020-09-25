@@ -44,6 +44,11 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public void deleteById(Long id) {
+        recipeRepository.deleteById(id);
+    }
+
+    @Override
     public Set<Recipe> getRecipes() {
         log.debug("I'm in the service");
 
