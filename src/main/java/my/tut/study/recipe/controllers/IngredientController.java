@@ -2,6 +2,7 @@ package my.tut.study.recipe.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import my.tut.study.recipe.commands.IngredientCommand;
+import my.tut.study.recipe.domain.Recipe;
 import my.tut.study.recipe.services.IngredientService;
 import my.tut.study.recipe.services.RecipeService;
 import my.tut.study.recipe.services.UnitOfMeasureService;
@@ -45,7 +46,18 @@ public class IngredientController {
 
     @PostMapping("recipe/{recipeId}/ingredient")
     public String saveOrUpdate(@ModelAttribute IngredientCommand ingredientCommand) {
-        ingredientService.save(ingredientCommand);
-        return "redirect:/recipe/" + ingredientCommand.getRecipeId() + "/ingredient/" + ingredientCommand.getId() + "/show";
+        IngredientCommand command = ingredientService.save(ingredientCommand);
+        return "redirect:/recipe/" + ingredientCommand.getRecipeId() + "/ingredient/" + command.getId() + "/show";
+    }
+
+    @GetMapping("recipe/{recipeId}/ingredient/new")
+    public String addNew(@PathVariable String recipeId, Model model) {
+        //check if recipeId not bad
+        Recipe recipe = recipeService.findById(Long.valueOf(recipeId));
+        IngredientCommand ingredientCommand = new IngredientCommand();
+        ingredientCommand.setRecipeId(Long.valueOf(recipeId));
+        model.addAttribute("ingredient", ingredientCommand);
+        model.addAttribute("uomList", unitOfMeasureService.getAll());
+        return "recipe/ingredient/ingredientform";
     }
 }

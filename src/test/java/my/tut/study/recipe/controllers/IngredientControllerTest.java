@@ -3,6 +3,7 @@ package my.tut.study.recipe.controllers;
 import my.tut.study.recipe.commands.IngredientCommand;
 import my.tut.study.recipe.commands.RecipeCommand;
 import my.tut.study.recipe.commands.UnitOfMeasureCommand;
+import my.tut.study.recipe.domain.Recipe;
 import my.tut.study.recipe.services.IngredientService;
 import my.tut.study.recipe.services.RecipeService;
 import my.tut.study.recipe.services.UnitOfMeasureService;
@@ -17,7 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -83,5 +84,21 @@ public class IngredientControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("ingredient", "uomList"))
                 .andExpect(view().name("recipe/ingredient/ingredientform"));
+    }
+
+    @Test
+    public void addNew() throws Exception {
+        RecipeCommand recipeCommand = new RecipeCommand();
+        Recipe recipe = new Recipe();
+
+        when(recipeService.findById(anyLong())).thenReturn(recipe);
+        when(unitOfMeasureService.getAll()).thenReturn(new HashSet<>());
+
+        mockMvc.perform(get("/recipe/1/ingredient/new"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("ingredient", "uomList"))
+                .andExpect(view().name("recipe/ingredient/ingredientform"));
+
+        verify(recipeService, times(1)).findById(anyLong());
     }
 }

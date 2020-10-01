@@ -21,7 +21,8 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <!--/*@thymesVar id="ingredient" type="my.tut.study.recipe.commands.IngredientCommand"*/-->
-            <form  th:object="${ingredient}" th:action="@{'/recipe/' + ${ingredient.getRecipeId()} + '/ingredient'} " method="post">
+            <form th:object="${ingredient}" th:action="@{'/recipe/' + ${ingredient.getRecipeId()} + '/ingredient'} "
+                  method="post">
                 <input type="hidden" th:field="*{id}"/>
                 <div class="pannel-group">
                     <div class="panel panel-primary">
@@ -47,8 +48,9 @@
                                     <select class="form-control" name="unitOfMeasure.id">
                                         <option th:each="uomEach : ${uomList}"
                                                 th:value="${uomEach.id}"
-                                                th:selected="${uomEach.id.equals(ingredient.unitOfMeasure.id)}"
-                                                th:text="${uomEach.description}">Each</option>
+                                                th:selected="${ingredient.unitOfMeasure!=null ? uomEach.id.equals(ingredient.unitOfMeasure.id) : false}"
+                                                th:text="${uomEach.description}">Each
+                                        </option>
                                     </select>
                                 </div>
                             </div>
