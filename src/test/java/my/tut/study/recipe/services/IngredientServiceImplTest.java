@@ -1,12 +1,14 @@
 package my.tut.study.recipe.services;
 
 import my.tut.study.recipe.commands.IngredientCommand;
+import my.tut.study.recipe.commands.UnitOfMeasureCommand;
 import my.tut.study.recipe.converters.IngredientCommandToIngredient;
 import my.tut.study.recipe.converters.IngredientToIngredientCommand;
 import my.tut.study.recipe.converters.UnitOfMeasureCommandToUnitOfMeasure;
 import my.tut.study.recipe.converters.UnitOfMeasureToUnitOfMeasureCommand;
 import my.tut.study.recipe.domain.Ingredient;
 import my.tut.study.recipe.domain.Recipe;
+import my.tut.study.recipe.domain.UnitOfMeasure;
 import my.tut.study.recipe.repositories.RecipeRepository;
 import my.tut.study.recipe.repositories.UnitOfMeasureRepository;
 import org.junit.Before;
@@ -79,15 +81,20 @@ public class IngredientServiceImplTest {
         IngredientCommand command = new IngredientCommand();
         command.setId(3L);
         command.setRecipeId(2L);
-
-        Optional<Recipe> recipeOptional = Optional.of(new Recipe());
-
+        command.setDescription("description");
         Recipe savedRecipe = new Recipe();
+        UnitOfMeasureCommand unitOfMeasure = new UnitOfMeasureCommand();
+        unitOfMeasure.setId(4L);
+        command.setUnitOfMeasure(unitOfMeasure);
+
         savedRecipe.addIngredient(new Ingredient());
         savedRecipe.getIngredients().iterator().next().setId(3L);
 
+        Optional<Recipe> recipeOptional = Optional.of(savedRecipe);
+
         when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
         when(recipeRepository.save(any())).thenReturn(savedRecipe);
+        when(unitOfMeasureRepository.findById(anyLong())).thenReturn(Optional.of(new UnitOfMeasure()));
 
         //when
         IngredientCommand savedCommand = ingredientService.save(command);
@@ -120,5 +127,7 @@ public class IngredientServiceImplTest {
         //then
 
         assertEquals(1, recipe.getIngredients().size());
+        verify(recipeRepository, times(1)).findById(anyLong());
+        verify(recipeRepository, times(1)).save(any(Recipe.class));
     }
 }
